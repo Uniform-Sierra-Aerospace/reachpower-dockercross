@@ -191,6 +191,14 @@ int main(int argc, char** argv)
         offboard.set_position_ned(point1);
         sleep_for(seconds(15));
 
+        float battery_voltage = telemetry.battery().voltage_v;
+
+        while (battery_voltage < 7.5f){
+
+            std:cout << "Current Battery Voltage is too Low (<7.5V) Hovering To Charge...";
+            sleep_for(seconds(30));
+        }
+
         std::cout << "Aircraft is Ready to Perform Flight Pattern... Please Press Enter \n ";
 
         //prompt 
