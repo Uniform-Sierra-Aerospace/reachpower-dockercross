@@ -146,13 +146,13 @@ int main(int argc, char** argv)
     }
 
     // Set up callback to monitor altitude while the vehicle is in flight
-    telemetry.subscribe_position([](Telemetry::Position position) {
-        // std::cout << "Altitude: " << position.relative_altitude_m << " m\n";
+    telemetry.subscribe_position_velocity_ned([](Telemetry::PositionVelocityNed position) {
+      //  std::cout << "Altitude: " << position.relative_altitude_m << " m\n";
     });
 
     // Ensure we get within .5m of our desired altitude
-    while (takeoff_altitude - telemetry.position().relative_altitude_m > 0.25f){
-        std::cout << "Climbing... Current Altitude: " << telemetry.position().relative_altitude_m << "m\n";
+    while (takeoff_altitude + telemetry.position_velocity_ned().position.down_m > 0.25f){
+        std::cout << "Climbing... Current Altitude: " << -(telemetry.position_velocity_ned().position.down_m) << "\n";
         sleep_for(seconds(1)); 
 
     }
