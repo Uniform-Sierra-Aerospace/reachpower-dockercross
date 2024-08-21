@@ -98,6 +98,15 @@ int main(int argc, char** argv)
 
     std::cout << "Local Position Valid...\n";
 
+    // Reset local altitude to 0 (capture current altitude as zero reference)
+    float initial_altitude = telemetry.position_velocity_ned().position.down_m;
+    std::cout << "Initial altitude (NED down_m): " << initial_altitude << "m\n";
+
+    // Use initial_altitude as the reference point
+    auto adjusted_altitude = [initial_altitude](float current_down_m) {
+        return -(current_down_m - initial_altitude);
+    };
+    
     // Callback to listen for manual control messages
     mavlink_passthrough.subscribe_message(MAVLINK_MSG_ID_HEARTBEAT, [](const mavlink_message_t& message){
         
