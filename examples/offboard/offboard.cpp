@@ -146,13 +146,13 @@ int main(int argc, char** argv)
     }
 
     // Set up callback to monitor altitude while the vehicle is in flight
-    telemetry.subscribe_position([](Telemetry::Position position) {
-        // std::cout << "Altitude: " << position.relative_altitude_m << " m\n";
+    telemetry.subscribe_position_velocity_ned([](Telemetry::PositionVelocityNed position) {
+      //  std::cout << "Altitude: " << position.relative_altitude_m << " m\n";
     });
 
     // Ensure we get within .5m of our desired altitude
-    while (takeoff_altitude - telemetry.position().relative_altitude_m > 0.25f){
-        std::cout << "Climbing... Current Altitude: " << telemetry.position().relative_altitude_m << "m\n";
+    while (takeoff_altitude + telemetry.position_velocity_ned().position.down_m > 0.25f){
+        std::cout << "Climbing... Current Altitude: " << -(telemetry.position_velocity_ned().position.down_m) << "\n";
         sleep_for(seconds(1)); 
 
     }
@@ -206,7 +206,7 @@ int main(int argc, char** argv)
         Offboard::PositionNedYaw point4{(ui/2), (ui/2), pa, 0.0f};
         Offboard::PositionNedYaw point5{(ui/2), -(ui/2), pa, 0.0f};
         Offboard::PositionNedYaw point6{-(ui/2), -(ui/2), pa, 0.0f};
-        Offboard::PositionNedYaw point7{0.0f, 0.0f, pa, 0.0f};
+        Offboard::PositionNedYaw point7{0.0f, 0.0f, -pa, 0.0f};
 
         std::cout <<"Heading to Position 1...\n" ;
         offboard.set_position_ned(point2);
