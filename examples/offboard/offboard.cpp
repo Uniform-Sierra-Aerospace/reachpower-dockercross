@@ -195,7 +195,7 @@ int main(int argc, char** argv)
 
         while (battery_voltage < 7.5f){
 
-            std:cout << "Current Battery Voltage is too Low (<7.5V) Hovering To Charge...";
+            std::cerr << "Current Battery Voltage is too Low (<7.5V) Hovering To Charge...";
             sleep_for(seconds(30));
         }
 
