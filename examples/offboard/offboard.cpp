@@ -206,7 +206,7 @@ int main(int argc, char** argv)
         Offboard::PositionNedYaw point4{(ui/2), (ui/2), pa, 0.0f};
         Offboard::PositionNedYaw point5{(ui/2), -(ui/2), pa, 0.0f};
         Offboard::PositionNedYaw point6{-(ui/2), -(ui/2), pa, 0.0f};
-        Offboard::PositionNedYaw point7{0.0f, 0.0f, -pa, 0.0f};
+        Offboard::PositionNedYaw point7{0.0f, 0.0f, pa, 0.0f};
 
         std::cout <<"Heading to Position 1...\n" ;
         offboard.set_position_ned(point2);
