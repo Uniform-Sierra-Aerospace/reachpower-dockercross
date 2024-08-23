@@ -183,6 +183,7 @@ int main(int argc, char** argv)
             std::cerr << "Offboard Failed" << "\n";
         
             return 1;
+            }
     }
 
     std::cout << "Flying the "<< pattern_dimension << " meter Rectangle Pattern...\n";
