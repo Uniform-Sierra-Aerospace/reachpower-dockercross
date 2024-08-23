@@ -172,7 +172,17 @@ int main(int argc, char** argv)
 
     if (offboard_result != Offboard::Result::Success) {
         std::cerr << "Offboard Failed" << "\n";
-        return 1;
+        
+        const Offboard::VelocityNedYaw stay{};
+        offboard.set_velocity_ned(stay);
+
+        std::cout <<"Entering Offboard Mode...\n" ;
+        Offboard::Result offboard_result = offboard.start();
+
+            if (offboard_result != Offboard::Result::Success) {
+            std::cerr << "Offboard Failed" << "\n";
+        
+            return 1;
     }
 
     std::cout << "Flying the "<< pattern_dimension << " meter Rectangle Pattern...\n";
