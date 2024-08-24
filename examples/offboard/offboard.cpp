@@ -120,7 +120,7 @@ int main(int argc, char** argv)
     });
 
     if (telemetry.position_velocity_ned().position.down_m < -0.2f || telemetry.position_velocity_ned().position.down_m > 0.2f) {
-    std::cerr << "Current local altitude is out of safe takeoff range (-0.5 to 0.5 m). Reboot Aircraft At Launch Location, and Do Not Move It Before Takeoff.\n";
+    std::cerr << "Current local altitude is out of safe takeoff range (-0.2 to 0.2 m). Reboot Aircraft At Launch Location, and Do Not Move It Before Takeoff.\n";
     return 1;  // Exit the program or take other action to prevent takeoff
     } else {
     std::cout << "Current altitude is within safe takeoff range. Proceeding with takeoff.\n";
