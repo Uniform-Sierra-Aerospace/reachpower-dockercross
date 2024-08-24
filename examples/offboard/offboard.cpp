@@ -92,7 +92,7 @@ int main(int argc, char** argv)
 
 //     Check until vehicle is ready to arm
      while (telemetry.health().is_local_position_ok != true) {
-        std::cout << "Vehicle is getting ready to arm\n";
+        std::cout << "Vehicle is getting ready to arm, poor position lock\n";
         sleep_for(seconds(1));
     }
 
@@ -200,7 +200,7 @@ int main(int argc, char** argv)
 
     float ui = pattern_dimension;
 
-    while (telemetry.health().is_local_position_ok == true) {
+    while (true) {
  
 
         float pa = -(takeoff_altitude);
