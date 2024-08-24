@@ -159,19 +159,16 @@ int main(int argc, char** argv)
 
     // Hover for 5 seconds
     sleep_for(seconds(5));
-
-    //Send Command before going into Offboard
-
-    const Offboard::VelocityNedYaw stay{};
-    offboard.set_velocity_ned(stay);
-
-    //
-
-    sleep_for(seconds(5));
     
     // Retry logic for entering Offboard mode
     int retry_offboard_count = 3;  // Number of retries
     while (retry_offboard_count > 0) {
+
+        const Offboard::VelocityNedYaw stay{};
+        offboard.set_velocity_ned(stay);
+
+        sleep_for(seconds(5));
+        
         std::cout << "Entering Offboard Mode...\n";
         Offboard::Result offboard_result = offboard.start();
 
@@ -180,9 +177,6 @@ int main(int argc, char** argv)
             break;  // Exit the loop if successful
         } else {
             std::cerr << "Failed to enter Offboard mode. Retrying...\n";
-
-            const Offboard::VelocityNedYaw stay{};
-            offboard.set_velocity_ned(stay);
             
             sleep_for(seconds(2));  // Wait for 2 seconds before retrying
             retry_offboard_count--;
