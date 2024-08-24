@@ -157,33 +157,41 @@ int main(int argc, char** argv)
 
     }
 
-    // Hover for 1 minutes
+    // Hover for 5 seconds
     sleep_for(seconds(5));
 
     //Send Command before going into Offboard
 
     const Offboard::VelocityNedYaw stay{};
     offboard.set_velocity_ned(stay);
+
+    //
+
+    sleep_for(seconds(5));
     
-    // Start Offboard Mode
-
-    std::cout <<"Entering Offboard Mode...\n" ;
-    Offboard::Result offboard_result = offboard.start();
-
-    if (offboard_result != Offboard::Result::Success) {
-        std::cerr << "Offboard Failed" << "\n";
-        
-        const Offboard::VelocityNedYaw stay{};
-        offboard.set_velocity_ned(stay);
-
-        std::cout <<"Entering Offboard Mode...\n" ;
+    // Retry logic for entering Offboard mode
+    int retry_offboard_count = 3;  // Number of retries
+    while (retry_offboard_count > 0) {
+        std::cout << "Entering Offboard Mode...\n";
         Offboard::Result offboard_result = offboard.start();
 
-            if (offboard_result != Offboard::Result::Success) {
-            std::cerr << "Offboard Failed" << "\n";
-        
-            return 1;
-            }
+        if (offboard_result == Offboard::Result::Success) {
+            std::cout << "Offboard mode successfully started.\n";
+            break;  // Exit the loop if successful
+        } else {
+            std::cerr << "Failed to enter Offboard mode. Retrying...\n";
+
+            const Offboard::VelocityNedYaw stay{};
+            offboard.set_velocity_ned(stay);
+            
+            sleep_for(seconds(2));  // Wait for 2 seconds before retrying
+            retry_offboard_count--;
+        }
+    }
+
+    if (retry_offboard_count == 0) {
+        std::cerr << "Unable to enter Offboard mode after multiple attempts. Exiting...\n";
+        return 1;
     }
 
     std::cout << "Flying the "<< pattern_dimension << " meter Rectangle Pattern...\n";
