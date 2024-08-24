@@ -166,8 +166,6 @@ int main(int argc, char** argv)
 
         const Offboard::VelocityNedYaw stay{};
         offboard.set_velocity_ned(stay);
-
-        sleep_for(seconds(5));
         
         std::cout << "Entering Offboard Mode...\n";
         Offboard::Result offboard_result = offboard.start();
