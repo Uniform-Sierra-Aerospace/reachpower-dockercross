@@ -114,17 +114,18 @@ int main(int argc, char** argv)
 
     });
 
-    // Arm vehicle
-    std::cout << "Arming...\n";
-    const Action::Result arm_result = action.arm();
+    // Set up callback to monitor altitude while the vehicle is in flight
+    telemetry.subscribe_position_velocity_ned([](Telemetry::PositionVelocityNed position) {
+      //  std::cout << "Altitude: " << position.relative_altitude_m << " m\n";
+    });
 
-    if (arm_result != Action::Result::Success) {
-        std::cerr << "Arming failed: " << arm_result << '\n';
-        return 1;
+    if (telemetry.position_velocity_ned().position.down_m < -0.2f || telemetry.position_velocity_ned().position.down_m > 0.2f) {
+    std::cerr << "Current local altitude is out of safe takeoff range (-0.5 to 0.5 m). Reboot Aircraft At Launch Location, and Do Not Move It Before Takeoff.\n";
+    return 1;  // Exit the program or take other action to prevent takeoff
+    } else {
+    std::cout << "Current altitude is within safe takeoff range. Proceeding with takeoff.\n";
     }
-
-    // Take off
-
+    
     float takeoff_altitude = altitude; //Altitude in Meters
 
     Action:: Result set_altitude_result = action.set_takeoff_altitude(takeoff_altitude);
@@ -137,6 +138,17 @@ int main(int argc, char** argv)
         std::cout << "Takeoff Altitude Set To:" << takeoff_altitude << "meters" << std::endl;
 
     }
+    
+    // Arm vehicle
+    std::cout << "Arming...\n";
+    const Action::Result arm_result = action.arm();
+
+    if (arm_result != Action::Result::Success) {
+        std::cerr << "Arming failed: " << arm_result << '\n';
+        return 1;
+    }
+
+    // Take off
 
     std::cout << "Taking off...\n";
     const Action::Result takeoff_result = action.takeoff();
@@ -144,11 +156,6 @@ int main(int argc, char** argv)
         std::cerr << "Takeoff failed: " << takeoff_result << '\n';
         return 1;
     }
-
-    // Set up callback to monitor altitude while the vehicle is in flight
-    telemetry.subscribe_position_velocity_ned([](Telemetry::PositionVelocityNed position) {
-      //  std::cout << "Altitude: " << position.relative_altitude_m << " m\n";
-    });
 
     // Ensure we get within .5m of our desired altitude
     while (takeoff_altitude + telemetry.position_velocity_ned().position.down_m > 0.25f){
